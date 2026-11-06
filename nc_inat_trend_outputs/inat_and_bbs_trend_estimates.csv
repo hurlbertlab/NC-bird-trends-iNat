@@ -1,0 +1,71 @@
+Species,standardization,inat_APC_percent.x,n_years.x,first_year.x,last_year.x,inat_APC_percent.y,n_years.y,first_year.y,last_year.y,BBS_APC_percent,metric_note
+Brown Thrasher,annual_bird_observers,39.36038446271348,11,2015,2025,NA,NA,NA,NA,-1.256,Uses annual bird_observers; lifetime-ever and current-year contributor counts are not separately available.
+Brown Thrasher,bird_contributors_same_year,39.36038446271348,11,2015,2025,NA,NA,NA,NA,-1.256,Duplicate alias of annual_bird_observers; same source field.
+Brown Thrasher,superuser_observation_proxy,3.2765785456679186,11,2015,2025,NA,NA,NA,NA,-1.256,"Uses observations by 10+ bird-observation users, not a count of those users."
+Brown Thrasher,total_bird_observations,3.482934012868566,11,2015,2025,NA,NA,NA,NA,-1.256,
+Brown Thrasher,total_iNat_observations,-1.622610944045888,11,2015,2025,NA,NA,NA,NA,-1.256,
+Brown Thrasher,total_iNat_users,40.390037834059655,11,2015,2025,NA,NA,NA,NA,-1.256,
+Common Grackle,annual_bird_observers,28.132026109068708,11,2015,2025,NA,NA,NA,NA,-7.528,Uses annual bird_observers; lifetime-ever and current-year contributor counts are not separately available.
+Common Grackle,bird_contributors_same_year,28.132026109068708,11,2015,2025,NA,NA,NA,NA,-7.528,Duplicate alias of annual_bird_observers; same source field.
+Common Grackle,superuser_observation_proxy,-5.0444836982394765,11,2015,2025,NA,NA,NA,NA,-7.528,"Uses observations by 10+ bird-observation users, not a count of those users."
+Common Grackle,total_bird_observations,-4.854754427521368,11,2015,2025,NA,NA,NA,NA,-7.528,
+Common Grackle,total_iNat_observations,-9.548942250283988,11,2015,2025,NA,NA,NA,NA,-7.528,
+Common Grackle,total_iNat_users,29.078719627239337,11,2015,2025,NA,NA,NA,NA,-7.528,
+European Starling,annual_bird_observers,28.85512641625163,11,2015,2025,NA,NA,NA,NA,-3.503,Uses annual bird_observers; lifetime-ever and current-year contributor counts are not separately available.
+European Starling,bird_contributors_same_year,28.85512641625163,11,2015,2025,NA,NA,NA,NA,-3.503,Duplicate alias of annual_bird_observers; same source field.
+European Starling,superuser_observation_proxy,-4.508611714539857,11,2015,2025,NA,NA,NA,NA,-3.503,"Uses observations by 10+ bird-observation users, not a count of those users."
+European Starling,total_bird_observations,-4.317811725609433,11,2015,2025,NA,NA,NA,NA,-3.503,
+European Starling,total_iNat_observations,-9.038490729068183,11,2015,2025,NA,NA,NA,NA,-3.503,
+European Starling,total_iNat_users,29.807162504852023,11,2015,2025,NA,NA,NA,NA,-3.503,
+House Sparrow,annual_bird_observers,43.93484570447128,11,2015,2025,NA,NA,NA,NA,-1.391,Uses annual bird_observers; lifetime-ever and current-year contributor counts are not separately available.
+House Sparrow,bird_contributors_same_year,43.93484570447128,11,2015,2025,NA,NA,NA,NA,-1.391,Duplicate alias of annual_bird_observers; same source field.
+House Sparrow,superuser_observation_proxy,6.666600089881669,11,2015,2025,NA,NA,NA,NA,-1.391,"Uses observations by 10+ bird-observation users, not a count of those users."
+House Sparrow,total_bird_observations,6.879729111061628,11,2015,2025,NA,NA,NA,NA,-1.391,
+House Sparrow,total_iNat_observations,1.606596230122026,11,2015,2025,NA,NA,NA,NA,-1.391,
+House Sparrow,total_iNat_users,44.9982971272352,11,2015,2025,NA,NA,NA,NA,-1.391,
+Northern Cardinal,annual_bird_observers,35.45466876323129,11,2015,2025,NA,NA,NA,NA,0.229,Uses annual bird_observers; lifetime-ever and current-year contributor counts are not separately available.
+Northern Cardinal,bird_contributors_same_year,35.45466876323129,11,2015,2025,NA,NA,NA,NA,0.229,Duplicate alias of annual_bird_observers; same source field.
+Northern Cardinal,superuser_observation_proxy,0.38214799591189674,11,2015,2025,NA,NA,NA,NA,0.229,"Uses observations by 10+ bird-observation users, not a count of those users."
+Northern Cardinal,total_bird_observations,0.5827201424721373,11,2015,2025,NA,NA,NA,NA,0.229,
+Northern Cardinal,total_iNat_observations,-4.379736754162411,11,2015,2025,NA,NA,NA,NA,0.229,
+Northern Cardinal,total_iNat_users,36.455465057632686,11,2015,2025,NA,NA,NA,NA,0.229,
+Northern Flicker,annual_bird_observers,32.37807496166831,11,2015,2025,NA,NA,NA,NA,-4.633,Uses annual bird_observers; lifetime-ever and current-year contributor counts are not separately available.
+Northern Flicker,bird_contributors_same_year,32.37807496166831,11,2015,2025,NA,NA,NA,NA,-4.633,Duplicate alias of annual_bird_observers; same source field.
+Northern Flicker,superuser_observation_proxy,-1.8978405576877355,11,2015,2025,NA,NA,NA,NA,-4.633,"Uses observations by 10+ bird-observation users, not a count of those users."
+Northern Flicker,total_bird_observations,-1.7018240239277782,11,2015,2025,NA,NA,NA,NA,-4.633,
+Northern Flicker,total_iNat_observations,-6.551568200741675,11,2015,2025,NA,NA,NA,NA,-4.633,
+Northern Flicker,total_iNat_users,33.35614008183929,11,2015,2025,NA,NA,NA,NA,-4.633,
+Pileated Woodpecker,annual_bird_observers,33.79996259754656,11,2015,2025,NA,NA,NA,NA,0.049,Uses annual bird_observers; lifetime-ever and current-year contributor counts are not separately available.
+Pileated Woodpecker,bird_contributors_same_year,33.79996259754656,11,2015,2025,NA,NA,NA,NA,0.049,Duplicate alias of annual_bird_observers; same source field.
+Pileated Woodpecker,superuser_observation_proxy,-0.8441143450625299,11,2015,2025,NA,NA,NA,NA,0.049,"Uses observations by 10+ bird-observation users, not a count of those users."
+Pileated Woodpecker,total_bird_observations,-0.6459923758982078,11,2015,2025,NA,NA,NA,NA,0.049,
+Pileated Woodpecker,total_iNat_observations,-5.547828194656423,11,2015,2025,NA,NA,NA,NA,0.049,
+Pileated Woodpecker,total_iNat_users,34.788533224024796,11,2015,2025,NA,NA,NA,NA,0.049,
+Red-shouldered Hawk,annual_bird_observers,45.57803999341017,11,2015,2025,NA,NA,NA,NA,2.649,Uses annual bird_observers; lifetime-ever and current-year contributor counts are not separately available.
+Red-shouldered Hawk,bird_contributors_same_year,45.57803999341017,11,2015,2025,NA,NA,NA,NA,2.649,Duplicate alias of annual_bird_observers; same source field.
+Red-shouldered Hawk,superuser_observation_proxy,7.884331260053634,11,2015,2025,NA,NA,NA,NA,2.649,"Uses observations by 10+ bird-observation users, not a count of those users."
+Red-shouldered Hawk,total_bird_observations,8.099893412618119,11,2015,2025,NA,NA,NA,NA,2.649,
+Red-shouldered Hawk,total_iNat_observations,2.7665611977897964,11,2015,2025,NA,NA,NA,NA,2.649,
+Red-shouldered Hawk,total_iNat_users,46.65363202949047,11,2015,2025,NA,NA,NA,NA,2.649,
+Ruby-throated Hummingbird,annual_bird_observers,31.813829005339223,11,2015,2025,NA,NA,NA,NA,-4.606,Uses annual bird_observers; lifetime-ever and current-year contributor counts are not separately available.
+Ruby-throated Hummingbird,bird_contributors_same_year,31.813829005339223,11,2015,2025,NA,NA,NA,NA,-4.606,Duplicate alias of annual_bird_observers; same source field.
+Ruby-throated Hummingbird,superuser_observation_proxy,-2.3159894602798548,11,2015,2025,NA,NA,NA,NA,-4.606,"Uses observations by 10+ bird-observation users, not a count of those users."
+Ruby-throated Hummingbird,total_bird_observations,-2.1208084239130898,11,2015,2025,NA,NA,NA,NA,-4.606,
+Ruby-throated Hummingbird,total_iNat_observations,-6.949881137255465,11,2015,2025,NA,NA,NA,NA,-4.606,
+Ruby-throated Hummingbird,total_iNat_users,32.787725238107626,11,2015,2025,NA,NA,NA,NA,-4.606,
+Wild Turkey,annual_bird_observers,32.38099235836827,11,2015,2025,NA,NA,NA,NA,-0.34,Uses annual bird_observers; lifetime-ever and current-year contributor counts are not separately available.
+Wild Turkey,bird_contributors_same_year,32.38099235836827,11,2015,2025,NA,NA,NA,NA,-0.34,Duplicate alias of annual_bird_observers; same source field.
+Wild Turkey,superuser_observation_proxy,-1.8956785462194703,11,2015,2025,NA,NA,NA,NA,-0.34,"Uses observations by 10+ bird-observation users, not a count of those users."
+Wild Turkey,total_bird_observations,-1.6996576925750184,11,2015,2025,NA,NA,NA,NA,-0.34,
+Wild Turkey,total_iNat_observations,-6.549508749834643,11,2015,2025,NA,NA,NA,NA,-0.34,
+Wild Turkey,total_iNat_users,33.35907903349806,11,2015,2025,NA,NA,NA,NA,-0.34,
+Brown Thrasher,superuser_users_unavailable,NA,NA,NA,NA,NA,0,NA,NA,-1.256,Unavailable: input has no count of active 10+ bird-observation users.
+Common Grackle,superuser_users_unavailable,NA,NA,NA,NA,NA,0,NA,NA,-7.528,Unavailable: input has no count of active 10+ bird-observation users.
+European Starling,superuser_users_unavailable,NA,NA,NA,NA,NA,0,NA,NA,-3.503,Unavailable: input has no count of active 10+ bird-observation users.
+House Sparrow,superuser_users_unavailable,NA,NA,NA,NA,NA,0,NA,NA,-1.391,Unavailable: input has no count of active 10+ bird-observation users.
+Northern Cardinal,superuser_users_unavailable,NA,NA,NA,NA,NA,0,NA,NA,0.229,Unavailable: input has no count of active 10+ bird-observation users.
+Northern Flicker,superuser_users_unavailable,NA,NA,NA,NA,NA,0,NA,NA,-4.633,Unavailable: input has no count of active 10+ bird-observation users.
+Pileated Woodpecker,superuser_users_unavailable,NA,NA,NA,NA,NA,0,NA,NA,0.049,Unavailable: input has no count of active 10+ bird-observation users.
+Red-shouldered Hawk,superuser_users_unavailable,NA,NA,NA,NA,NA,0,NA,NA,2.649,Unavailable: input has no count of active 10+ bird-observation users.
+Ruby-throated Hummingbird,superuser_users_unavailable,NA,NA,NA,NA,NA,0,NA,NA,-4.606,Unavailable: input has no count of active 10+ bird-observation users.
+Wild Turkey,superuser_users_unavailable,NA,NA,NA,NA,NA,0,NA,NA,-0.34,Unavailable: input has no count of active 10+ bird-observation users.
