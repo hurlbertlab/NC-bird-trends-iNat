@@ -14,11 +14,11 @@ setwd("C:/Z_School/school/HurlbertLab/lab meeting")
 start_year <- 2015L
 end_year <- 2025L
 years_expected <- start_year:end_year
-output_dir <- "nc_inat_trend_outputs_raw_slope"
+output_dir <- "nc_inat_trend_outputs_NEW"
 dir.create(output_dir, showWarnings = FALSE, recursive = TRUE)
 
 birds <- read_csv("north_carolina_bird_observations_by_year.csv", show_col_types = FALSE)
-stats <- read_csv("north_carolina_inaturalist_stats_by_year.csv", show_col_types = FALSE)
+stats <- read_csv("nc_inat_stats_2015_2025.csv", show_col_types = FALSE)
 bbs <- read_csv("north_carolina_bbs_2015_2025_trend.csv", show_col_types = FALSE) %>%
   transmute(Species, BBS_APC_percent = as.numeric(Trend))
 
