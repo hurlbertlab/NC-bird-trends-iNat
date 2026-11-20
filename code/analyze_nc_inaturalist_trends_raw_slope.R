@@ -238,3 +238,389 @@ cat("iNaturalist slopes are fitted to raw standardized fractions, not log-transf
 cat("BBS raw-scale slopes are derived from the BBS APC trajectory anchored at each 2015 iNaturalist fraction.\n")
 cat("\nRaw-slope correlation summary across species:\n")
 print(correlation_summary)
+
+
+#making a big panel with all species and standardization:
+
+# Each panel is one species x standardization combination.
+# plot_data must already contain:
+# standardized_rate, iNat_fitted_rate, BBS_implied_rate,
+# Species, standardization, and year.
+library(ggh4x)
+
+all_metrics <- names(metric_denominators)
+all_species <- bird_species
+
+plot_data_grid <- plot_data %>%
+  mutate(
+    Species = factor(Species, levels = all_species),
+    standardization = factor(standardization, levels = all_metrics)
+  ) %>%
+  arrange(Species, standardization, year)
+
+combined_grid <- ggplot(plot_data_grid, aes(x = year)) +
+  geom_line(
+    aes(y = standardized_rate,
+        color = "iNaturalist annual standardized fractions"),
+    linewidth = 0.4, alpha = 0.75
+  ) +
+  geom_point(
+    aes(y = standardized_rate,
+        color = "iNaturalist annual standardized fractions"),
+    size = 0.7, alpha = 0.8
+  ) +
+  geom_line(
+    aes(y = iNat_fitted_rate,
+        color = "iNaturalist raw-scale linear fit"),
+    linewidth = 0.75
+  ) +
+  geom_line(
+    aes(y = BBS_implied_rate,
+        color = "BBS trend anchored at 2015 iNaturalist fraction"),
+    linewidth = 0.75, linetype = "dashed"
+  ) +
+  ggh4x::facet_grid2(
+    rows = vars(Species),
+    cols = vars(standardization),
+    scales = "free_y",
+    independent = "y"
+  ) +
+  scale_color_manual(values = c(
+    "iNaturalist annual standardized fractions" = "#8BAE9D",
+    "iNaturalist raw-scale linear fit" = "#147D64",
+    "BBS trend anchored at 2015 iNaturalist fraction" = "#B64926"
+  )) +
+  scale_x_continuous(
+    breaks = c(2015, 2020, 2025),
+    minor_breaks = NULL
+  ) +
+  labs(
+    title = "iNaturalist standardized fractions and BBS trend trajectories",
+    subtitle = paste(
+      "Rows are species; columns are standardizations.",
+      "Each count is divided by that metric's value in the same year."
+    ),
+    x = "Year",
+    y = "Standardized fraction (species count / same-year metric)",
+    color = NULL,
+    caption = paste(
+      "Green: raw-scale linear fit to iNaturalist fractions.",
+      "Dashed orange: BBS 2015-2025 trend anchored at the 2015 iNaturalist fraction.",
+      "The BBS file provides a period trend, not annual observed BBS values."
+    )
+  ) +
+  theme_minimal(base_size = 9) +
+  theme(
+    legend.position = "bottom",
+    strip.text.x = element_text(size = 8, face = "bold"),
+    strip.text.y = element_text(size = 8),
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    panel.grid.minor = element_blank(),
+    panel.spacing = grid::unit(0.35, "lines")
+  )
+
+ggsave(
+  file.path(output_dir, "raw_slope_all_species_by_standardization.png"),
+  plot = combined_grid,
+  width = 18, height = 16, dpi = 300,
+  limitsize = FALSE
+)
+
+# PDF is convenient for zooming into the full panel grid.
+ggsave(
+  file.path(output_dir, "raw_slope_all_species_by_standardization.pdf"),
+  plot = combined_grid,
+  width = 18, height = 16,
+  limitsize = FALSE
+)
+
+
+#now adding a column for raw Inat trends
+
+# Create an additional, unstandardized raw-count series for each species.
+# Fit its raw-scale linear trend across 2015-2025, and create a BBS APC-implied
+# path anchored at that species' first iNaturalist raw count in 2015.
+raw_count_plot_data <- annual_counts %>%
+  select(year, Species, inat_count) %>%
+  group_by(Species) %>%
+  group_modify(~ {
+    d <- .x %>% arrange(year)
+    if (nrow(d) != length(years_expected) ||
+        !identical(as.integer(d$year), as.integer(years_expected)) ||
+        any(is.na(d$inat_count))) {
+      stop(paste0("Raw-count panel requires 11 non-missing years for ", .y$Species))
+    }
+    raw_fit <- lm(inat_count ~ I(year - start_year), data = d)
+    d %>% mutate(
+      standardization = "raw_iNat_counts",
+      standardized_rate = inat_count,
+      iNat_fitted_rate = unname(coef(raw_fit)[["(Intercept)"]]) +
+        unname(coef(raw_fit)[["I(year - start_year)"]]) * (year - start_year)
+    )
+  }) %>%
+  ungroup() %>%
+  left_join(bbs, by = "Species") %>%
+  group_by(Species) %>%
+  arrange(year, .by_group = TRUE) %>%
+  mutate(
+    first_iNat_rate_2015 = standardized_rate[year == start_year][1],
+    BBS_implied_rate = first_iNat_rate_2015 *
+      (1 + BBS_APC_percent / 100)^(year - start_year)
+  ) %>%
+  ungroup()
+
+# One combined grid: species are rows; the first column is raw iNaturalist
+# counts, followed by the standardized metrics. Each cell is one species x
+# measure combination. Every panel has an independent y-axis because raw counts
+# and standardized fractions have different magnitudes. Standardized panels
+# use the year-specific denominators; the raw-count panel does not divide.
+all_metrics <- c("raw_iNat_counts", names(metric_denominators))
+all_species <- bird_species
+plot_data_grid <- bind_rows(plot_data, raw_count_plot_data) %>%
+  mutate(
+    Species = factor(Species, levels = all_species),
+    standardization = factor(standardization, levels = all_metrics)
+  ) %>%
+  arrange(Species, standardization, year)
+
+combined_grid <- ggplot(plot_data_grid, aes(x = year)) +
+  geom_line(aes(y = standardized_rate,
+                color = "iNaturalist annual values (raw counts or standardized fractions)"),
+            linewidth = 0.4, alpha = 0.75) +
+  geom_point(aes(y = standardized_rate,
+                 color = "iNaturalist annual values (raw counts or standardized fractions)"),
+             size = 0.7, alpha = 0.8) +
+  geom_line(aes(y = iNat_fitted_rate,
+                color = "iNaturalist raw-scale linear fit"),
+            linewidth = 0.75) +
+  geom_line(aes(y = BBS_implied_rate,
+                color = "BBS APC trajectory anchored at 2015 iNaturalist value"),
+            linewidth = 0.75, linetype = "dashed") +
+  ggh4x::facet_grid2(
+    rows = vars(Species),
+    cols = vars(standardization),
+    scales = "free_y",
+    independent = "y",
+    labeller = labeller(standardization = as_labeller(c(
+      raw_iNat_counts = "Raw iNaturalist counts",
+      total_iNat_observations = "Per total iNat observations",
+      total_iNat_users = "Per total iNat users",
+      total_bird_observations = "Per bird observations",
+      annual_bird_observers = "Per annual bird observers",
+      superuser_observation_proxy = "Per superuser-observation proxy"
+    )))
+  ) +
+  scale_color_manual(values = c(
+    "iNaturalist annual values (raw counts or standardized fractions)" = "#8BAE9D",
+    "iNaturalist raw-scale linear fit" = "#147D64",
+    "BBS APC trajectory anchored at 2015 iNaturalist value" = "#B64926"
+  )) +
+  scale_x_continuous(breaks = c(2015, 2020, 2025), minor_breaks = NULL) +
+  labs(
+    title = "iNaturalist annual values and BBS trend trajectories",
+    subtitle = paste(
+      "Rows are species; first column is raw counts, remaining columns are standardizations.",
+      "Each standardized annual count is divided by that metric's value in the same year."
+    ),
+    x = "Year",
+    y = "Raw count (first column) or standardized fraction (other columns)",
+    color = NULL,
+    caption = paste(
+      "Solid green: raw-scale linear fit to annual iNaturalist values.",
+      "Dashed orange: supplied BBS 2015-2025 APC trajectory anchored to the first 2015 iNaturalist value in each panel.",
+      "BBS annual observations were not supplied."
+    )
+  ) +
+  theme_minimal(base_size = 9) +
+  theme(
+    legend.position = "bottom",
+    strip.text.x = element_text(size = 8, face = "bold"),
+    strip.text.y = element_text(size = 8),
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    panel.grid.minor = element_blank(),
+    panel.spacing = grid::unit(0.35, "lines")
+  )
+
+ggsave(
+  filename = file.path(output_dir, "raw_slope_species_by_measure_including_raw_counts.png"),
+  
+  plot = combined_grid,
+  width = 18,
+  height = 16,
+  dpi = 300,
+  limitsize = FALSE
+)
+
+# Also save a PDF version, which is easier to zoom when viewing the full grid.
+ggsave(
+  filename = file.path(output_dir, "raw_slope_species_by_measure_including_raw_counts.pdf"),
+  plot = combined_grid,
+  width = 18,
+  height = 16,
+  limitsize = FALSE
+)
+
+cat("\nCompleted. Outputs saved in: ", normalizePath(output_dir), "\n", sep = "")
+cat("iNaturalist slopes are fitted to raw standardized fractions, not log-transformed values.\n")
+cat("BBS raw-scale slopes are derived from the BBS APC trajectory anchored at each 2015 iNaturalist fraction.\n")
+cat("\nRaw-slope correlation summary across species:\n")
+print(correlation_summary)
+
+
+#ok now sorting by bbs decling to not declining? and diff colors for each standardization
+
+
+# Create an additional, unstandardized raw-count series for each species.
+# Fit its raw-scale linear trend across 2015-2025, and create a BBS APC-implied
+# path anchored at that species' first iNaturalist raw count in 2015.
+raw_count_plot_data <- annual_counts %>%
+  select(year, Species, inat_count) %>%
+  group_by(Species) %>%
+  group_modify(~ {
+    d <- .x %>% arrange(year)
+    if (nrow(d) != length(years_expected) ||
+        !identical(as.integer(d$year), as.integer(years_expected)) ||
+        any(is.na(d$inat_count))) {
+      stop(paste0("Raw-count panel requires 11 non-missing years for ", .y$Species))
+    }
+    raw_fit <- lm(inat_count ~ I(year - start_year), data = d)
+    d %>% mutate(
+      standardization = "raw_iNat_counts",
+      standardized_rate = inat_count,
+      iNat_fitted_rate = unname(coef(raw_fit)[["(Intercept)"]]) +
+        unname(coef(raw_fit)[["I(year - start_year)"]]) * (year - start_year)
+    )
+  }) %>%
+  ungroup() %>%
+  left_join(bbs, by = "Species") %>%
+  group_by(Species) %>%
+  arrange(year, .by_group = TRUE) %>%
+  mutate(
+    first_iNat_rate_2015 = standardized_rate[year == start_year][1],
+    BBS_implied_rate = first_iNat_rate_2015 *
+      (1 + BBS_APC_percent / 100)^(year - start_year)
+  ) %>%
+  ungroup()
+
+# One combined grid: species are rows; the first column is raw iNaturalist
+# counts, followed by the standardized metrics. Species are ordered by the BBS
+# trend from most declining (most negative APC) to least declining / increasing.
+# Every panel has an independent y-axis. Each metric has its own color for both
+# annual iNaturalist values and the fitted iNaturalist line; BBS is black dashed.
+all_metrics <- c("raw_iNat_counts", names(metric_denominators))
+species_order <- bbs %>%
+  arrange(BBS_APC_percent) %>%
+  pull(Species)
+
+plot_data_grid <- bind_rows(plot_data, raw_count_plot_data) %>%
+  mutate(
+    Species = factor(Species, levels = species_order),
+    standardization = factor(standardization, levels = all_metrics)
+  ) %>%
+  arrange(Species, standardization, year)
+
+metric_colors <- c(
+  raw_iNat_counts = "#555555",
+  total_iNat_observations = "#1B9E77",
+  total_iNat_users = "#D95F02",
+  total_bird_observations = "#7570B3",
+  annual_bird_observers = "#E7298A",
+  superuser_observation_proxy = "#66A61E",
+  `BBS trend (anchored at 2015 iNaturalist value)` = "#222222"
+)
+
+combined_grid <- ggplot(plot_data_grid, aes(x = year)) +
+  geom_line(aes(y = standardized_rate, color = standardization,
+                group = interaction(Species, standardization)),
+            linewidth = 0.4, alpha = 0.75) +
+  geom_point(aes(y = standardized_rate, color = standardization),
+             size = 0.7, alpha = 0.8) +
+  geom_line(aes(y = iNat_fitted_rate, color = standardization,
+                group = interaction(Species, standardization)),
+            linewidth = 0.75) +
+  geom_line(aes(y = BBS_implied_rate,
+                color = "BBS trend (anchored at 2015 iNaturalist value)"),
+            linewidth = 0.75, linetype = "dashed", show.legend = TRUE) +
+  ggh4x::facet_grid2(
+    rows = vars(Species),
+    cols = vars(standardization),
+    scales = "free_y",
+    independent = "y",
+    labeller = labeller(standardization = as_labeller(c(
+      raw_iNat_counts = "Raw iNaturalist counts",
+      total_iNat_observations = "Per total iNat observations",
+      total_iNat_users = "Per total iNat users",
+      total_bird_observations = "Per bird observations",
+      annual_bird_observers = "Per annual bird observers",
+      superuser_observation_proxy = "Per superuser-observation proxy"
+    )))
+  ) +
+  scale_color_manual(
+    values = metric_colors,
+    breaks = c(all_metrics, "BBS trend (anchored at 2015 iNaturalist value)"),
+    labels = c(
+      "Raw iNaturalist counts",
+      "Per total iNat observations",
+      "Per total iNat users",
+      "Per bird observations",
+      "Per annual bird observers",
+      "Per superuser-observation proxy",
+      "BBS trend (anchored at 2015 iNaturalist value)"
+    )
+  ) +
+  scale_x_continuous(breaks = c(2015, 2020, 2025), minor_breaks = NULL) +
+  labs(
+    title = "iNaturalist annual values and BBS trend trajectories",
+    subtitle = paste(
+      "Species rows ordered from most declining to least declining by BBS APC.",
+      "First column is raw counts; remaining columns are standardizations using the same-year denominator."
+    ),
+    x = "Year",
+    y = "Raw count (first column) or standardized fraction (other columns)",
+    color = NULL,
+    caption = paste(
+      "Each iNaturalist metric has its own color; raw counts are gray.",
+      "Black dashed: supplied BBS 2015-2025 APC trajectory anchored to the 2015 iNaturalist value in each panel.",
+      "BBS annual observations were not supplied."
+    )
+  ) +
+  theme_minimal(base_size = 9) +
+  theme(
+    legend.position = "bottom",
+    strip.text.x = element_text(size = 8, face = "bold"),
+    strip.text.y = element_text(size = 8),
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    panel.grid.minor = element_blank(),
+    panel.spacing = grid::unit(0.35, "lines")
+  )
+
+ggsave(
+  filename = file.path(output_dir, "raw_slope_species_by_measure_including_raw_counts.png"),
+  
+  plot = combined_grid,
+  width = 18,
+  height = 16,
+  dpi = 300,
+  limitsize = FALSE
+)
+
+# Also save a PDF version, which is easier to zoom when viewing the full grid.
+ggsave(
+  filename = file.path(output_dir, "raw_slope_species_by_measure_including_raw_counts.pdf"),
+  plot = combined_grid,
+  width = 18,
+  height = 16,
+  limitsize = FALSE
+)
+
+cat("\nCompleted. Outputs saved in: ", normalizePath(output_dir), "\n", sep = "")
+cat("iNaturalist slopes are fitted to raw standardized fractions, not log-transformed values.\n")
+cat("BBS raw-scale slopes are derived from the BBS APC trajectory anchored at each 2015 iNaturalist fraction.\n")
+cat("\nRaw-slope correlation summary across species:\n")
+print(correlation_summary)
+
+
+
+
+
+
